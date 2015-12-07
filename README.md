@@ -9,7 +9,7 @@ ADS Project
 ## AWS Access:
 ssh -i <key> ec2-user@54.152.167.250
 
-## bashrc
+### bashrc
 sudo vim /etc/bashrc
 change this line to:
 [ "$PS1" = "\\s-\\v\\\$ " ] && PS1="\[\e[0;36m\]$NICKNAME:\[\e[m\] \[\e[1;31m\]\W\[\e[0m\] > "
@@ -17,6 +17,8 @@ change this line to:
 ## Operation
 ### Start server:
 sudo node start-app.js
+Run in screen, detach with ctrl-a,d
+reattach with ctrl-a,r
 
 ## Credits
 
