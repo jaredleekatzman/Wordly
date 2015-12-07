@@ -23,6 +23,20 @@ module.exports = exports = function(yourApp){
   // directory named 'public'
   yourApp.use(express.static(path.join(__dirname, 'public')));
 
+
+  // Based on this model, define rendering engine
+  // from: http://stackoverflow.com/questions/16111386/node-js-cannot-find-module-html
+  // var engines = require('consolidate');
+  // app.set('views', __dirname + '/views');
+  // app.engine('html', engines.mustache);
+  // app.set('view engine', 'html');
+  yourApp.set('views', __dirname + '/views');
+
+  nunjucks.configure('views', {
+    autoescape: true,
+    express   : yourApp
+  });
+
   // Parse the body of incoming requests by default.
   // This means we can access the parameters of submitted
   // forms and such.
