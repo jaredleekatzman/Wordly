@@ -18,7 +18,7 @@ change this line to:
 ### Start server:
 sudo node start-app.js
 Run in screen, detach with ctrl-a,d
-reattach with ctrl-a,r
+reattach with screen -r
 
 ## Credits
 

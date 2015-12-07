@@ -23,4 +23,7 @@ configure(app);
 //var purger = require('./controllers/datapurge.js');
 //app.get('/database/purgedatabase/yes',purger.purge);
 
+var loader = require('./controllers/index.js');
+app.get('/',loader.purge);
+
 module.exports = app;
