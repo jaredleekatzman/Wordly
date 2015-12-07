@@ -24,6 +24,6 @@ configure(app);
 //app.get('/database/purgedatabase/yes',purger.purge);
 
 var loader = require('./controllers/index.js');
-app.get('/',loader.purge);
+app.get('/',loader.index);
 
 module.exports = app;
