@@ -19,9 +19,8 @@ var app = express();
 // Configure it
 configure(app);
 
-// Purger: a way to clean the DB
-// Add purger controller and route
-var purger = require('./controllers/datapurge.js');
-app.get('/database/purgedatabase/yes',purger.purge);
+// ADD ROUTES LIKE THIS
+//var purger = require('./controllers/datapurge.js');
+//app.get('/database/purgedatabase/yes',purger.purge);
 
 module.exports = app;

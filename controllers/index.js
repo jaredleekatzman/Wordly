@@ -13,7 +13,7 @@
 function index (request, response) {
   var now = new Date();
   var contextData = {
-    'title': 'CrowdSound',
+    'title': 'Wordly',
     'homeActive': true
   };
   response.render('index.html', contextData);
