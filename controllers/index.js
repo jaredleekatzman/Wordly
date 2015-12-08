@@ -10,6 +10,8 @@
 /*
  * Controller that renders our index (home) page.
  */
+require
+
 function index (request, response) {
   var now = new Date();
   var contextData = {

@@ -1,5 +1,46 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<!--  
+      This site created by Eli Block and Tim Follo.
+      CrowdSound logo, name, and related imagery may not be reused without permission.
+      All content, code, methods, and other data may not be reused without permission.
+  
+  -->
 
-{% block mainContent %}
-	<h2> This is a test </h2>
-{% endblock %}
+<html>
+  <head>
+    <title>{{ title }}</title>
+
+    <!-- Style -->
+  	<link rel='stylesheet' href='/stylesheets/normalize.css' type="text/css">
+  	<link rel='stylesheet' href='/stylesheets/skeleton.css' type="text/css">
+  	<link rel='stylesheet' href='/stylesheets/style.css' type="text/css">
+
+  	<!-- Fonts -->
+  	<link href='https://fonts.googleapis.com/css?family=Amaranth:400italic' rel='stylesheet' type='text/css'>
+  	<link href='https://fonts.googleapis.com/css?family=Amaranth' rel='stylesheet' type='text/css'>
+  	<link href='https://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+  	<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+
+  	 <!-- Resize Textarea  -->
+  	<script src="/scripts/bundle.js"></script>
+  	<!-- <script language="javascript" type="text/javascript" src="/scripts/autosizeNodes.js"></script> -->
+
+  </head>
+
+	<body class="container">
+
+	<h1> Wordly. </h1>
+<div class="container">
+	<form>
+		<div class="row">
+			<div class="ten columns">
+				<textarea id="autosize" class="u-full-width" placeholder="I'm thinking of a word that …" id="definition"></textarea>
+			</div>
+			<div class="two columns">
+				<input id="go" class="button u-full-width" type="submit" value="go">
+			</div>
+		</div>
+	</form>
+</div>
+  </body>
+</html>

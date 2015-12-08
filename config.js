@@ -21,7 +21,7 @@ module.exports = exports = function(yourApp){
 
   // Serve images, css, and client-side js about of the
   // directory named 'public'
-  yourApp.use(express.static(path.join(__dirname, 'public')));
+  yourApp.use(express.static(__dirname + '/public'));
 
 
   // Based on this model, define rendering engine

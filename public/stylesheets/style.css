@@ -1,0 +1,37 @@
+h1 {
+	font-family: Lobster;
+	text-align: center;
+	padding-top: 10%;
+	color: #0089b7;
+}
+
+form {
+	font-family: "Courier New";
+	padding-top: 5%;
+}
+
+#go {
+	text-align: center;
+	padding: 0px;
+}
+
+textarea {
+	border-left: none;
+	border-right: none;
+	border-bottom: none;
+	resize:vertical;
+	border-radius: 0;
+}
+
+textarea:focus {
+	border-color: rgba(0,0,0,.5);
+	border-left: none;
+	border-right: none;
+	border-bottom: none;
+	resize:vertical;
+	border-radius: 0;
+}
+
+::-webkit-resizer {
+    display: none;
+}
