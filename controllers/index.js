@@ -21,6 +21,16 @@ function index (request, response) {
   response.render('index.html', contextData);
 }
 
+function query (request, response) {
+  var contextData = {
+    'title': 'Wordly',
+    'homeActive': true,
+    'query': request.body.name
+  };
+  response.render('index.html', contextData);
+}
+
 module.exports = {
-  "index": index
+  "index": index,
+  "query":query
 };

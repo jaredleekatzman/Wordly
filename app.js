@@ -25,5 +25,6 @@ configure(app);
 
 var loader = require('./controllers/index.js');
 app.get('/',loader.index);
+app.post('/',loader.query);
 
 module.exports = app;

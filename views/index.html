@@ -35,7 +35,7 @@
 
 	<h1> Wordly. </h1>
 <div class="container">
-	<form>
+	<form method="post">
 		<div class="row">
 			<div class="ten columns">
 				<textarea id="autosize" class="u-full-width" placeholder="I'm thinking of a word that means …" id="definition"></textarea>
@@ -45,6 +45,22 @@
 			</div>
 		</div>
 	</form>
+
+<div class="row results">
+	<h5>You're looking for a word that means...</h5>
+	<p class="u-full-width">aaawd {{ response.query }}</p>
+</div>
+
+<div class="row results">
+	<h5>Here it is:</h5>
+	<p class="u-full-width">aaawd {{ query }}</p>
+</div>
+
+<div class="row results">
+	<h5>How did we pick?</h5>
+	<p class="u-full-width">aaawd {{ query }}</p>
+</div>
+
 </div>
   </body>
 </html>

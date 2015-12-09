@@ -5,6 +5,12 @@ h1 {
 	color: #0089b7;
 }
 
+h5 {
+	font-family: Lobster;
+	text-align: left;
+	color: gray;
+}
+
 form {
 	font-family: "Courier New";
 	padding-top: 5%;
@@ -34,4 +40,9 @@ textarea:focus {
 
 ::-webkit-resizer {
     display: none;
+}
+
+.results {
+	font-family: "Courier New";
+	padding-top: 5%;
 }
