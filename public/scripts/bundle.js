@@ -245,5 +245,8 @@
 },{}],2:[function(require,module,exports){
 var autosize = require('autosize');
 
-autosize(document.querySelectorAll('textarea'));
+window.onload = function(e){ 
+	console.log(document.querySelectorAll('textarea'));
+	autosize(document.querySelectorAll('textarea'));
+}
 },{"autosize":1}]},{},[2]);
