@@ -26,8 +26,8 @@ import sys
 wordNetPath = '/usr/local/WordNet-3.0/bin/'
 os.environ['PATH'] = '{}:{}'.format(wordNetPath, os.environ['PATH'])
 
-words, embeddings = pickle.load(open('polyglot-en.pkl', 'rb'))
-# words = pickle.load(open('74550com.mon', 'rb'))
+#words, embeddings = pickle.load(open('polyglot-en.pkl', 'rb'))
+words = [line.strip() for line in open('74550com.mon', 'rb')]
 
 filepath = sys.argv[1]
 print "Printing to: {}".format(filepath)
@@ -64,6 +64,14 @@ with open (filepath, "w") as myfile:
 		try:
 			word = str(word)
 		except Exception:
+			badMisses += 1
+			misses += 1
+			continue
+
+		if re.search("\W", word):
+			# print "bad word: {}".format(word)
+			badMisses += 1
+			misses += 1
 			continue
 
 		process = subprocess.Popen("wn \"{}\" -over".format( word ), stdout=subprocess.PIPE, shell=True)
