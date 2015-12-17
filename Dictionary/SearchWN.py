@@ -27,6 +27,7 @@ wordNetPath = '/usr/local/WordNet-3.0/bin/'
 os.environ['PATH'] = '{}:{}'.format(wordNetPath, os.environ['PATH'])
 
 words, embeddings = pickle.load(open('polyglot-en.pkl', 'rb'))
+# words = pickle.load(open('74550com.mon', 'rb'))
 
 filepath = sys.argv[1]
 print "Printing to: {}".format(filepath)
@@ -60,32 +61,37 @@ defEx = re.compile("^[^\"]+?(?=;)|(?<=; )[^\"]+?(?=;|\)|$)|^[^\"]+?(?=;|\)|$|,|:
 
 with open (filepath, "w") as myfile:
 	for i, word in enumerate(words[start:stop]):
-		process = subprocess.Popen("wn {} -over".format( str(word) ), stdout=subprocess.PIPE, shell=True)
-		out, err = process.communicate()
-		text_definitions[str(word)] = out
-		num_definitions[str(word)] = process.returncode
+		try:
+			word = str(word)
+		except Exception:
+			continue
 
-		if num_definitions[str(word)] == -1:
+		process = subprocess.Popen("wn \"{}\" -over".format( word ), stdout=subprocess.PIPE, shell=True)
+		out, err = process.communicate()
+		text_definitions[word] = out
+		num_definitions[word] = process.returncode
+
+		if num_definitions[word] == -1:
 			# print "Error."
 			errors += 1
 			continue
-		elif num_definitions[str(word)] == 0:
+		elif num_definitions[word] == 0:
 			# print "Miss."
 			misses += 1
 			pureMisses += 1
 			continue
 
-		senses = senseEx.findall(text_definitions[str(word)])
+		senses = senseEx.findall(text_definitions[word])
 
 		if len(senses)==0:
-			if re.search("\W", str(word)):
-				# print "bad word: {}".format(str(word))
+			if re.search("\W", word):
+				# print "bad word: {}".format(word)
 				badMisses += 1
 				misses += 1
 			else:
 				# print "\nInner miss: senses"
-				# print "word: {}".format(str(word))
-				# print "def: {}\n".format(text_definitions[str(word)])
+				# print "word: {}".format(word)
+				# print "def: {}\n".format(text_definitions[word])
 				misses += 1
 				senseMisses += 1
 
@@ -94,16 +100,18 @@ with open (filepath, "w") as myfile:
 
 			if len(defs)==0:
 				# print "Inner miss: defs"
-				# print "word: {}".format(str(word))
+				# print "word: {}".format(word)
 				# print "sense: {}\n".format(sense)
 				misses += 1
 				defMisses += 1
 
 			for definition in defs:
-				tup = (definition, str(word), embeddings[i])
-				DefWordEmbed.append(tup)
-				# print "{}\t{}".format(str(word),definition)
-				myfile.write("{}\t{}\n".format(str(word),definition))
+				# For managing tuples:
+				# tup = (definition, word, embeddings[i])
+				# DefWordEmbed.append(tup)
+
+				# print "{}\t{}".format(word,definition)
+				myfile.write("{}\t{}\n".format(word,definition))
 
 print "Errors: {}".format(errors)
 print "Misses: {}".format(misses)
