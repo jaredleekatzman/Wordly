@@ -62,17 +62,17 @@ defEx = re.compile("^[^\"]+?(?=;)|(?<=; )[^\"]+?(?=;|\)|$)|^[^\"]+?(?=;|\)|$|,|:
 with open (filepath, "w") as myfile:
 	for i, word in enumerate(words[start:stop]):
 		try:
-			word = str(word)
+			word = str(word).replace(" ", "_")
 		except Exception:
 			badMisses += 1
 			misses += 1
 			continue
 
-		if re.search("\W", word):
-			# print "bad word: {}".format(word)
-			badMisses += 1
-			misses += 1
-			continue
+		# if re.search("\W", word):
+		# 	print "bad word: {}".format(word)
+		# 	badMisses += 1
+		# 	misses += 1
+		# 	continue
 
 		process = subprocess.Popen("wn \"{}\" -over".format( word ), stdout=subprocess.PIPE, shell=True)
 		out, err = process.communicate()
@@ -85,6 +85,7 @@ with open (filepath, "w") as myfile:
 			continue
 		elif num_definitions[word] == 0:
 			# print "Miss."
+			print "missed word: {}".format(word)
 			misses += 1
 			pureMisses += 1
 			continue
