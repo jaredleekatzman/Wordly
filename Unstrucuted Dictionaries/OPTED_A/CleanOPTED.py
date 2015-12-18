@@ -30,6 +30,7 @@ with open (outfile, "w") as outfile:
 				if entry and entry.group():
 					word = bEx.search(entry.group())
 					defn = defEx.search(entry.group())
+					print "{}\t{}\n".format(word.group(),defn.group())
 					outfile.write("{}\t{}\n".format(word.group(),defn.group()))
 
 				else:
