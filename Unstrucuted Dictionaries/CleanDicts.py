@@ -1,7 +1,9 @@
-#!/Applications/anaconda/bin/python
+#!/usr/bin/python
 # coding: latin-1
 
 # CleanDicts.py
+
+# tim's mac py loc: /Applications/anaconda/bin/python
 
 import subprocess
 import pickle
@@ -25,7 +27,7 @@ splitEx = re.compile(" prefix| +n\.| +v\.| +pl\.| +adj\.| +abbr\.| +contr\.| +sy
 parenEx = re.compile("\(\W*(?:-ting|usu\.|prefix|n\.|v\.|pl\.|adj\.|abbr\.|contr\.|symb\.|slang|int\.|poss\.|pron\.|adv\.|naut\.|colloq\.|—n\.|—v\.|—pl\.|—adj\.|—[aA]bbr\.|—contr\.|—symb\.|—slang|—int\.|—poss\.|—pron\.|—adv\.|—naut\.|—colloq\.|—prep\.|prep\.|suffix|archaic|past part\.|predic\.|attrib\.|comb\.|interrog\.|conj\.|—predic\.|—attrib\.|—comb\.|—interrog\.|—conj\.|gram\.|mus\.|—gram\.|—mus\.|[0-9]|—[0-9]|coarse|—coarse|-*refl.|-*sing)[^\)]*\)", re.IGNORECASE)
 
 #  [ABCDEFGHJKLMNOPQRSTUVWXYZ&] 
-letterEx = re.compile("[ABCDEFGHJKLMNOPQRSTUVWXYZ&]")
+letterEx = re.compile(" [ABCDEFGHJKLMNOPQRSTUVWXYZ&] ")
 
 with open (outfile, "w") as outfile:
 	if mode == "oxford":
@@ -42,17 +44,14 @@ with open (outfile, "w") as outfile:
 
 					splits = re.split(splitEx, definition)
 					for defn in splits:
-						splits2 = re.split(parenEx, defn)
-						
-						# print '\n'
-						# print splits
-						# print splits2
-						
-						for defn2 in splits2:
-							splits3 = 
-							for defn3 in splits3:
-								if defn2 and defn2 != "":
-									outfile.write(":\t{}\n".format(defn2.strip()))
+						if defn and defn != "" and defn != " ":
+							splits2 = re.split(parenEx, defn)
+							for defn2 in splits2:
+								if defn2 and defn2 != "" and defn2 != " ":
+									splits3 = re.split(letterEx, defn2)
+									for defn3 in splits3:
+										if defn3 and defn3 != "" and defn3 != " ":
+											outfile.write(":\t{}\n".format(defn3.strip()))
 				else:
 					print "{}".format(line)
 
