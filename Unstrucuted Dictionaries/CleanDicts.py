@@ -22,6 +22,8 @@ wordEx = re.compile("^.+?(?= prefix| +n\.| +v\.| +pl\.| +adj\.| +abbr\.| +contr\
 defEx = re.compile("(?<=slang|refix|oarse)|(?<=[0-9] |\) |\. |\; ).*(?= [0-9]| \[|$)", re.IGNORECASE)
 splitEx = re.compile(" prefix| +n\.| +v\.| +pl\.| +adj\.| +abbr\.| +contr\.| +symb\.| +slang| +int\.| +poss\.| +pron\.| +adv\.| +naut\.| +colloq\.| +—n\.| +—v\.| +—pl\.| +—adj\.| +—[aA]bbr\.| +—contr\.| +—symb\.| +—slang| +—int\.| +—poss\.| +—pron\.| +—adv\.| +—naut\.| +—colloq\.| +—prep\.| +prep\.| +suffix| +archaic| +past part\.| +predic\.| +attrib\.| +comb\.| +interrog\.| +conj\.| +—predic\.| +—attrib\.| +—comb\.| +—interrog\.| +—conj\.| +gram\.| +mus\.| +—gram\.| +—mus\.| +[0-9]| +—[0-9]| +coarse| +—coarse|\[.*\]", re.IGNORECASE)
 
+parenEx = re.compile("\(.*(prefix|n\.|v\.|pl\.|adj\.|abbr\.|contr\.|symb\.|slang|int\.|poss\.|pron\.|adv\.|naut\.|colloq\.|—n\.|—v\.|—pl\.|—adj\.|—[aA]bbr\.|—contr\.|—symb\.|—slang|—int\.|—poss\.|—pron\.|—adv\.|—naut\.|—colloq\.|—prep\.|prep\.|suffix|archaic|past part\.|predic\.|attrib\.|comb\.|interrog\.|conj\.|—predic\.|—attrib\.|—comb\.|—interrog\.|—conj\.|gram\.|mus\.|—gram\.|—mus\.|[0-9]|—[0-9]|coarse|—coarse|-*refl.|-*sing)[^\)]*\)", re.IGNORECASE)
+
 with open (outfile, "w") as outfile:
 	if mode == "oxford":
 		for line in open(infile, 'rb'):
@@ -37,8 +39,10 @@ with open (outfile, "w") as outfile:
 
 					splits = re.split(splitEx, definition)
 					for defn in splits:
-						if defn != "":
-							outfile.write(":\t{}\n".format(defn.strip()))
+						splits2 = re.split(parenEx, defn)
+						for defn2 in splits2:
+							if defn != "":
+								outfile.write(":\t{}\n".format(defn2.strip()))
 				else:
 					print "{}".format(line)
 
@@ -77,7 +81,7 @@ with open (outfile, "w") as outfile:
 # 		try:
 # 			word = str(word).replace(" ", "_")
 # 		except Exception:
-# 			badMisses += 1
+# 			badMisses= 1
 # 			misses += 1
 # 			continue
 
