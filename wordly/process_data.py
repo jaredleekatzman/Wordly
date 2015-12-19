@@ -1,6 +1,6 @@
 """
 process_data.py -v VOCAB_EMBEDDING_FILE -d DICTIONARY_FILE -o OUTPUT_FILE 
-                --timestamp TRUE|FALSE --embeddings TRUE|FALSE --max_len N
+                --embeddings true|false --max_len N
 
 This Script should take in a dictionary in the format of:
 word\tdefinition
@@ -14,8 +14,11 @@ Author: Jared Katzman (12/18/2015)
 import argparse
 import pickle, cPickle
 import pandas as pd
+import numpy as np
 import re
 from datetime import datetime
+import sys
+import h5py
 
 SUCCESS = 0
 FAILURE = 1
@@ -24,9 +27,8 @@ def configure_arguments(parser):
     parser.add_argument('-v','--vocab_file')
     parser.add_argument('-d','--dictionary_file')
     parser.add_argument('-o','--output_file')
-    parser.add_argument('-t','--timestamp', type=bool, default=True)
     parser.add_argument('-e','--embeddings', type=bool, default=True)
-    parser.add_argument('-ml''--max_len',type=int, default=20)
+    parser.add_argument('-m','--max_len',type=int, default=20)
 
 def case_normalizer(word, dictionary):
     """ In case the word is not available in the vocabulary,
@@ -79,6 +81,17 @@ def sen_to_idx(sentence, word2id):
     idx = [word2id.get(word, 0) for word in words]
     return idx
 
+def padd_sentence(sent, maxlen, tokens):
+    """
+    Takens an individual sentence SENT
+    Padds it with PADD to the specified MAXLEN
+    """
+    if len(sent) > (maxlen - 2):
+        sent = sent[:(maxlen - 2)]
+    sent = [tokens['<S>']] + sent + [tokens['</S>']]
+    sent = sent + [tokens['<PAD>']] * (maxlen - len(sent))
+    return sent
+
 def get_sentence_embeddings(sent, embeddings):
     """
     Takes a matrix of sent (NUM_SENT, MAXLEN)
@@ -99,11 +112,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     configure_arguments(parser)
     args = parser.parse_args()
-    if args.timestamp:
-        strtime = datetime.now().strftime("%d%m_%M%S")
-        args.output_file = strtime + args.output_file
+    print args
 
     # Open Vocab List and Embeddings
+    print 'Loading Words and Embeddings...'
     if args.vocab_file.endswith('.pkl'):
         words, embeddings = pickle.load(open(args.vocab_file, 'rb'))
     else:
@@ -115,25 +127,39 @@ if __name__ == '__main__':
     id_word = dict(enumerate(words))
 
     # Open Dictionary File
+    print 'Opening Dictionary', args.dictionary_file
     with open(args.dictionary_file,'r') as dfp:
-       df = pd.read_csv(dfp, sep = '\t', na_filter=False)
+       df = pd.read_csv(dfp, sep = '\t', na_filter=False, header = None,
+        names = ['word','entry'])
+    print df.shape[0], 'entries'
 
+    print 'Mapping Dictionary to Indexes...'
     # Map entries and words to their IDs in vocab list WORDS
     idx = df['entry'].map(lambda s: sen_to_idx(s, word_id))
     y_idx = df['word'].map(lambda w: word_id.get(normalize(w, word_id), 0))
+    
+    print 'Saving Dictionary Tokens'
     if not args.embeddings:
         pdf = pd.concat([y_idx, idx], axis = 1)
         pdf.to_csv(args.output_file, sep ='\t')
-        return SUCCESS
+        sys.exit(SUCCESS)
 
     # Add Padding and Start / End TOKENS
-    x_idx = padd_sentence(idx, maxlen)
-    x_idx = np.asarray(list(locs)) # Convert pd.Series to np.Array
+    # Special tokens
+    Token_ID = {"<UNK>": 0, "<S>": 1, "</S>":2, "<PAD>": 3}
+    ID_Token = {v:k for k,v in Token_ID.iteritems()}
+
+    x_idx = idx.map(lambda i: padd_sentence(i, args.max_len, Token_ID))
+    x_idx = np.asarray(list(x_idx)) # Convert pd.Series to np.Array
+
+    print 'Converting Indexes to Embeddings'
     X = get_sentence_embeddings(x_idx, embeddings)
+    print 'X shape', X.shape
 
     y = map(lambda i: embeddings[i], y_idx.values)
-    y = np.asarray(Y)
+    y = np.asarray(y)
 
+    print 'Saving Embeddings...'
     if args.output_file.endswith('.pkl'):
         with open(args.output_file,'w') as output:
             cPickle.dump((X,y),output, -1) # -1 = cPickle.HIGHEST_PROTOCOL
@@ -143,4 +169,4 @@ if __name__ == '__main__':
         h5f.create_dataset('y', data = y)
         h5f.close()
 
-    return SUCCESS
+    sys.exit(SUCCESS)

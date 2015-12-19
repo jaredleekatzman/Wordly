@@ -5,7 +5,6 @@ from keras.layers.recurrent import LSTM
 from keras.callbacks import ModelCheckpoint
 from keras.datasets.data_utils import get_file
 from sklearn.cross_validation import train_test_split
-from datetime import datetime
 import numpy as np
 import random
 import sys
@@ -13,49 +12,67 @@ import cPickle, pickle
 import theano
 import theano.tensor as T
 import os
+import h5py
+from datetime import datetime
 
-SCRATCH_DIR = '/gpfs/home/fas/slade/jlk86/scratch/'
-print('Loading Data...')
-with open(SCRATCH_DIR + 'train_dataset.pkl') as fp:
-    (X, y) = cPickle.load(fp)
-n, maxlen, embedsize = X.shape
+def configure_arguments(parser):
+    parser.add_argument('-d','--dataset')
+    parser.add_argument('-s','--save_file')
+    parser.add_argument('-e','--num_epochs',type=int,default=25)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
-print('Number of Training Examples:',len(y_train))
-print('Number of Testing Examples:',len(y_test))
+def train_rnn(num_epochs = 25, dataset= '/home/fas/slade/jlk86/scratch/train_dataset.pkl', 
+    save_path = '/home/fas/slade/jlk86/weights.h5'):
 
-batch_size = 128
-num_epochs = 100
+    print('Loading Data...')
+    if dataset.endswith('.pkl'):
+        with open(dataset) as fp:
+            (X, y) = cPickle.load(fp)
+    elif dataset.endswith('.h5'):
+        h5f = h5py.File(dataset,'r')
+        X = h5f['X']
+        y = h5f['y']
+        h5f.close()
 
+    n, maxlen, embedsize = X.shape
 
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+    print('Number of Training Examples:',len(y_train))
+    print('Number of Testing Examples:',len(y_test))
 
-print('Build model...')
-model = Sequential()
-model.add(LSTM(512, return_sequences=True, input_shape=(maxlen, embedsize)))
-model.add(Dropout(0.2))
-model.add(LSTM(512, return_sequences=False))
-model.add(Dropout(0.2))
-model.add(Dense(embedsize))
-model.add(Activation('relu', init = 'glorot_normal'))
-model.add(Dense(embedsize))
-model.add(Activation('linear', init = 'glorot_normal'))
+    batch_size = 128
+    num_epochs = num_epochs
 
-def euclidian_dist(y_true,y_pred):
-    return T.sqrt(T.sum((y_true - y_pred) ** 2, axis = 1))
+    print('Build model...')
+    model = Sequential()
+    model.add(LSTM(512, return_sequences=True, input_shape=(maxlen, embedsize)))
+    model.add(Dropout(0.2))
+    model.add(LSTM(512, return_sequences=False))
+    model.add(Dropout(0.2))
+    model.add(Dense(embedsize, init='glorot_normal'))
+    model.add(Activation('linear'))
 
-home_dir = os.getenv('HOME', '/home/fas/slade/jlk86')
-path = home_dir + "/weights" + datetime.now().strftime("%M%d") + ".hdf5"
-checkpointer = ModelCheckpoint(filepath= path, 
-                               verbose=1, save_best_only=True)
+    def euclidian_dist(y_true,y_pred):
+        return T.sqrt(T.sum((y_true - y_pred) ** 2, axis = 1))
 
-print('Train...')
-model.compile(loss=euclidian_dist, optimizer='rmsprop')
-model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=num_epochs,
-         validation_data=(X_test,y_test), show_accuracy = True,
-         callbacks=[checkpointer])
-score, acc = model.evaluate(X_test, y_test,
-                           batch_size = batch_size,
-                           show_accuracy = True)
-print('Test score:', score)
-print('Test accuracy:', acc)
+    checkpointer = ModelCheckpoint(filepath= save_path, 
+                                   verbose=1, save_best_only=True)
+
+    print('Train...')
+    model.compile(loss=euclidian_dist, optimizer='rmsprop')
+    model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=num_epochs,
+             validation_data=(X_test,y_test), show_accuracy = True,
+             callbacks=[checkpointer])
+    score, acc = model.evaluate(X_test, y_test,
+                               batch_size = batch_size,
+                               show_accuracy = True)
+    print('Test score:', score)
+    print('Test accuracy:', acc)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    configure_arguments(parser)
+    args = parser.parse_args()
+    print args
+
+    train_rnn(args.num_epochs, args.dataset, args.save_file)
 
