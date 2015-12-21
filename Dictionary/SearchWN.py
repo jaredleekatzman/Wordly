@@ -26,7 +26,8 @@ import sys
 wordNetPath = '/usr/local/WordNet-3.0/bin/'
 os.environ['PATH'] = '{}:{}'.format(wordNetPath, os.environ['PATH'])
 
-words, embeddings = pickle.load(open('polyglot-en.pkl', 'rb')) # for pkl file
+words = [line.strip() for line in open('354984si.ngl', 'rb')] # for ngl file
+#words, embeddings = pickle.load(open('polyglot-en.pkl', 'rb')) # for pkl file
 #words = [line.strip() for line in open('74550com.mon', 'rb')] # for mobyword file
 
 filepath = sys.argv[1]
