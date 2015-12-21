@@ -1,0 +1,6 @@
+#!/bin/bash
+
+#StripHeaders
+# Usage: ./StripHeaders infile outfile
+
+awk -F' ' 'NF>6 {print}' $1 > $2 #infile  > newfile
