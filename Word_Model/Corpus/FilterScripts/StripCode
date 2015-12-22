@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#StripCode
+# Usage: ./StripCode [infiles]
+
+export LC_ALL=C
+export LC_CTYPE=C
+export LANG=C
+
+COUNTER=0
+for arg in "$@"
+do
+	#	STRIP STEPS:
+	#
+	#    short lines (headers)    |   doc Tags    |      list delimiters      |
+	awk -F' ' 'NF>6 {print}' $arg | sed '/<doc/d' | sed '/||/d' | sed '/!!/d' | sed '/^$/d' > /Users/follo/Desktop/ADS/Intermediate/wikicorpus/fullText/$COUNTER
+	let COUNTER=COUNTER+1
+done

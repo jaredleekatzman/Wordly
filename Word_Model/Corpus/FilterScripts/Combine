@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Combine
+# Usage: ./Combine outfile infiles
+
+export LC_ALL=C
+export LC_CTYPE=C
+export LANG=C
+
+COUNTER=0
+for arg in "$@"
+do
+	if [ $COUNTER = 0 ]; then
+		OUT=$arg
+		echo "Outfile:"
+		echo $OUT
+	else
+		echo $COUNTER
+		cat $arg >> $OUT
+	fi
+	let COUNTER=COUNTER+1
+done
+echo "Done"

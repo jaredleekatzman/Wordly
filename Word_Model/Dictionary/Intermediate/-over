@@ -1,0 +1,40 @@
+
+usage: wn word [-hgla] [-n#] -searchtype [-searchtype...]
+       wn [-l]
+
+	-h		Display help text before search output
+	-g		Display gloss
+	-l		Display license and copyright notice
+	-a		Display lexicographer file information
+	-o		Display synset offset
+	-s		Display sense numbers in synsets
+	-n#		Search only sense number #
+
+searchtype is at least one of the following:
+	-ants{n|v|a|r}		Antonyms
+	-hype{n|v}		Hypernyms
+	-hypo{n|v}, -tree{n|v}	Hyponyms & Hyponym Tree
+	-entav			Verb Entailment
+	-syns{n|v|a|r}		Synonyms (ordered by estimated frequency)
+	-smemn			Member of Holonyms
+	-ssubn			Substance of Holonyms
+	-sprtn			Part of Holonyms
+	-membn			Has Member Meronyms
+	-subsn			Has Substance Meronyms
+	-partn			Has Part Meronyms
+	-meron			All Meronyms
+	-holon			All Holonyms
+	-causv			Cause to
+	-pert{a|r}		Pertainyms
+	-attr{n|a}		Attributes
+	-deri{n|v}		Derived Forms
+	-domn{n|v|a|r}		Domain
+	-domt{n|v|a|r}		Domain Terms
+	-faml{n|v|a|r}		Familiarity & Polysemy Count
+	-framv			Verb Frames
+	-coor{n|v}		Coordinate Terms (sisters)
+	-simsv			Synonyms (grouped by similarity of meaning)
+	-hmern			Hierarchical Meronyms
+	-hholn			Hierarchical Holonyms
+	-grep{n|v|a|r}		List of Compound Words
+	-over			Overview of Senses

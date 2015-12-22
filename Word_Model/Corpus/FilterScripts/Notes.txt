@@ -1,0 +1,36 @@
+Common Headnings:
+
+See also.
+External links.
+References.
+Poetry published.
+Births.
+Deaths.
+Variations.
+History.
+Campus.
+
+Code:
+
+ENDOFARTICLE.
+</doc>
+<doc id="7986334" title="Sungai Besi LRT station" nonfiltered="2" processed="2" dbindex="1">
+Lines containing ||
+lines containing {{}}
+
+Other:
+
+<7 words on a line
+stopwords?
+spaces/tabs/empty lines
+
+Resources/Credits:
+
+Some help from 
+http://corpocrat.com/2015/10/18/beginners-word2vec-tutorial-on-large-text-corpus/
+
+Also:
+http://stackoverflow.com/questions/6188211/delete-all-the-lines-in-a-file-that-contains-a-specific-character
+
+http://unix.stackexchange.com/questions/151658/removal-of-lines-with-more-than-n-fields
+
