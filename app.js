@@ -24,7 +24,7 @@ configure(app);
 //app.get('/database/purgedatabase/yes',purger.purge);
 
 var loader = require('./controllers/index.js');
-app.get('/',loader.index);
-app.post('/',loader.query);
+app.get('/Wordly',loader.index);
+app.post('/Wordly',loader.query);
 
 module.exports = app;

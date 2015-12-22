@@ -7,6 +7,6 @@
  */
  "use strict";
 
-var port = 8080;
+var port = 80;
 
 module.exports = port;

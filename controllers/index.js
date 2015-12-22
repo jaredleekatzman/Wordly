@@ -16,7 +16,8 @@ function index (request, response) {
   var now = new Date();
   var contextData = {
     'title': 'Wordly',
-    'homeActive': true
+    'homeActive': true,
+    'display': "hide"
   };
   response.render('index.html', contextData);
 }
@@ -25,12 +26,15 @@ function query (request, response) {
   var contextData = {
     'title': 'Wordly',
     'homeActive': true,
-    'query': request.body.name
+    'query': request.body.query,
+    'display': (request.body.query == "") ? "hide" : ""
   };
+  console.log("Query: " + contextData.query);
+  console.log("Show Results? " + contextData.display);
   response.render('index.html', contextData);
 }
 
 module.exports = {
   "index": index,
-  "query":query
+  "query": query
 };
