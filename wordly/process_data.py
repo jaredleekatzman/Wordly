@@ -29,6 +29,7 @@ def configure_arguments(parser):
     parser.add_argument('-o','--output_file')
     parser.add_argument('-e','--embeddings', type=bool, default=True)
     parser.add_argument('-m','--max_len',type=int, default=20)
+    parser.add_argument('-s','--sens_padd',type=bool,default=False)
 
 def case_normalizer(word, dictionary):
     """ In case the word is not available in the vocabulary,
@@ -81,14 +82,18 @@ def sen_to_idx(sentence, word2id):
     idx = [word2id.get(word, 0) for word in words]
     return idx
 
-def padd_sentence(sent, maxlen, tokens):
+def padd_sentence(sent, maxlen, tokens, include_sens_tags = False):
     """
     Takens an individual sentence SENT
     Padds it with PADD to the specified MAXLEN
     """
-    if len(sent) > (maxlen - 2):
-        sent = sent[:(maxlen - 2)]
-    sent = [tokens['<S>']] + sent + [tokens['</S>']]
+    tags = 2 * int(include_sens_tags)
+    if len(sent) > (maxlen - tags):
+        sent = sent[:(maxlen - tags)]
+
+    if include_sens_tags:
+        sent = [tokens['<S>']] + sent + [tokens['</S>']]
+
     sent = sent + [tokens['<PAD>']] * (maxlen - len(sent))
     return sent
 
@@ -118,6 +123,11 @@ if __name__ == '__main__':
     print 'Loading Words and Embeddings...'
     if args.vocab_file.endswith('.pkl'):
         words, embeddings = pickle.load(open(args.vocab_file, 'rb'))
+    elif args.vocab_file.endswith('.hdf5'):
+        h5f = h5py.File(args.vocab_file,'r')
+        words = h5f['words'][:]
+        embeddings = h5f['embeddings'][:]
+        h5f.close()
     else:
         raise ValueError('File type not supported for given vocab_file %s' 
             % args.vocab_file)
@@ -146,11 +156,13 @@ if __name__ == '__main__':
 
     # Add Padding and Start / End TOKENS
     # Special tokens
-    Token_ID = {"<UNK>": 0, "<S>": 1, "</S>":2, "<PAD>": 3}
+    Token_ID = {"<UNK>": 0, "<S>": 1, "</S>":2, "<PAD>": 0}
     ID_Token = {v:k for k,v in Token_ID.iteritems()}
 
-    x_idx = idx.map(lambda i: padd_sentence(i, args.max_len, Token_ID))
+    x_idx = idx.map(lambda i: padd_sentence(i, args.max_len, Token_ID,
+        args.sens_padd))
     x_idx = np.asarray(list(x_idx)) # Convert pd.Series to np.Array
+    print 'X_idx shape', x_idx.shape
 
     print 'Converting Indexes to Embeddings'
     X = get_sentence_embeddings(x_idx, embeddings)
@@ -163,7 +175,7 @@ if __name__ == '__main__':
     if args.output_file.endswith('.pkl'):
         with open(args.output_file,'w') as output:
             cPickle.dump((X,y),output, -1) # -1 = cPickle.HIGHEST_PROTOCOL
-    elif args.output_file.endswith('.h5'):
+    elif args.output_file.endswith('.h5') or args.output_file.endswith('.hdf5'):
         h5f = h5py.File(args.output_file,'w')
         h5f.create_dataset('X', data = X)
         h5f.create_dataset('y', data = y)
