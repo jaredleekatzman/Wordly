@@ -1,12 +1,32 @@
-# Wordly Reverse Dictionary
+# *Wordly*: A Reverse Dictionary
 
 **Team Members:** Jared Katzman & Tim Follo
 
 ## Abstract
 
-<< @Tim Follo: Pargraph That hooks them into about why this is relevant >>
+***What's that word?***
 
-This reverse dictionary makes decision by using the weights computed by the RNN. The RNN 'decided' on these weights by performing thousands of computation to minimize the euclidian distance between a predicted word vector and a definition entry's true value. When the user queries the reverse dictionary, it performs a mathematical operation on the vectorized version of the query. We decide to show the user the X  closest words in vector space, in hopes that one of them is the word the user is thinking of.  << @Tim Follo: This needs to be beefed up to be more of "how does this fit into an the frame work of an audtomated decision system >> 
+*It's what happens when you put a lot of pressure on something to shrink it?*
+
+***It's on the tip of my tongue...***
+
+Wordly is a reverse dictionary decision system that could answer this question. More flexible and usable than a thesaurus, Wordly is a complete cognitive-based decision system (a thesaurus query, to the contrary, would be based on a large set of granular word congruence rules). It can take any novel, user-defined *description* of a word and produce the *word* the user is trying to describe.
+
+It might have taken you, a human proficient in the english language and familiar with this mode of forgetfullness (maybe even for this exact situation!) a moment beofre guessing: "compress". You read all the words in the description, then formed some semantic representation from the input (this is the part humans naturally excel at, while machines struggle), then searched your memory for a matching word. But your memory is fickle! You can know exactly what to look for, but maybe it has been years since you thought of "compress" that way, and it simply doesnt show up while you rack your brain.
+
+This simple, fun example demonstrates why a user might be interested in interacting with our system as presented here. As this document will show, we have built a user interface that is tailored to this use. However, the simplicity here obfuscates the complexity of such a decision, which boils down to choosing a single word that captures the meaning of a series of words. Wordly can map an infinitely large set of word *descriptions* to a finite set of *precise words*. We should not overlook the deeper potential of such a system: a ready-made method for assigning semantic meaning to word strings could be used in a number of language-processing contexts. 
+
+The rest of this paper will focus on the design and implementation details of this system, as well as results and analysis of performance. The rest of this section give a brief overview of the major concepts involved. 
+
+The first concept we borrow from computational linguistics and Natural Language Processing (NLP). An age old problem in NLP is how to represent semantics, or meaning. One method is to use semantic vectors, where the meaning of a word is encoded in a high dimensional vector whose position relative to other words reflects their related meanings. 
+
+Under the hood, Wordly makes its decisions by using a series of weights that have been pre-computed by a recurrent nueral network (RNN) to choose the most important parts of the user input. The Network then produces a vectorized representation of the entire query string, or *description*.
+
+The RNN 'decided' on the weights when it was 'trained' on a large set of dictionary *definitions*. The training process involves performing thousands of computations to minimize the euclidian distance between a predicted *word vector* and the *definition* entry's true value; thus, the RNN learns over time how to set the weights such that all definitions, on average, produce vectors that are close to their partner *words*.
+
+When the user queries our reverse dictionary with a *description*, Wordly performs a mathematical operation on the vectorized version of the query: It is able to compare words to the semantic representation of the *description* and use this to test candidates. We decide to show the user the X  closest words in vector space, in hopes that one of them is the word the user is thinking of.  
+
+This process, though a simplification, is modeled off of the way humans actually think about language, and as such this is an advanced cognitive decision model. Rather than simply matching preconceived sets of definitions, Wordly handles novel data and is only limited by the vocabulary we have trained it on and the quality of the word vectorizations.
 
 ## Design
 Numerous algorithms in Natural Language Processing (NLP) compute mathematical representations of words. These representations have shown to encode important semantic relationships and allow for more effective language modeling.
@@ -27,7 +47,7 @@ Examples like this have led us to question the extent of possible operations. Ve
 
 The premise is to take the definitions of a dictionary and build a deep neural network that learns to predict the corresponding entry words. We expect the network will learn general enough definitions for words such that a user can query the dictionary with a definition and the reverse dictionary will be able to predict which word the user is thinking of. The overall design of the system is below:
 
-![Wordly System Design](wordly_diagram.png)
+![Wordly System Design](http://54.152.167.250/wordly_diagram.png)
 
 We will take our training data (a set of definitions and their respective dictionary entries) and compute a vector representation of the words and defintions (a matrix of word vectors). We will then have numerical input for the network. The architecture of the network will be a recurrent neural network. We will train the network on the input data and attempt to minimize the euclidian distance between the predicted word vector and the true dictionary entry. Lastly, we will build a UI 
 to allow users to query their own definitions. The system will predict possible dictionary entries and display them to the user.
@@ -78,11 +98,31 @@ We evaluated the network with a Euclidian Distance objective function:
 $$
 J(\theta) := \sqrt{(y_{pred} - y_{true})^2}
 $$
-Where $y_{pred}$ is the predicted dictionary entry vector and $y_{true}$ is the vector embedding of the correct dictionary entry. Keras (on top of Theano) symbolically computes the gradients of the loss function with respect to the network parameters $\theta$. 
+Where $$ y_{pred} $$ is the predicted dictionary entry vector and $$ y_{true} $$ is the vector embedding of the correct dictionary entry. Keras (on top of Theano) symbolically computes the gradients of the loss function with respect to the network parameters $$ \theta $$. 
 
 ### User Interface
 
-<< @Tim Follo: Want to just write a short paragraph about a high level implemntation of the website? >>
+Wordly's user interface is an attractive web-based platform designed for simplicity, elegance, and performance. It primarily consists of a simple textbox and "go" button
+
+![Wordly Homepage](http://54.152.167.250/GUI.png)
+
+This interface is designed for carefree ease-of-use, making its proudest features unobtrusive: the text input feild scales to fit the input, the GUI scales responsively, and the response/explanation feilds hide when unused.
+
+Wordly can be accessed here: [http://54.152.167.250/Wordly](http://54.152.167.250/Wordly)
+
+Despite the minimal design and simplicity of user interaction, we built the GUI on top of a full-fetured *express.js*[^express.js] app that is deployed on *Amazon AWS*[^AWS] cloud management. In addition to making the service publicly available, this decision enables us to run the RNN generated back-end python model live on the server.
+
+[^express.js]: [express.js](http://expressjs.com/en/index.html)
+
+[^AWS]: [Amazon AWS](https://aws.amazon.com/what-is-cloud-computing/?nc1=f_cc)
+
+The core of the Wordly system is...
+
+The Explain function, another core feature of...
+
+#### UI Credits
+
+We used a number of pre-existing libraries and technologies to make this project as full-featured, robust, and modular as possible.
 
 ## Results
 We ran a couple of experiments, trying a couple of different neural network architectures. 
