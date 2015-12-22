@@ -145,11 +145,8 @@ We used a number of pre-existing libraries and technologies to make this project
 ## Results
 We ran a couple of experiments, trying a couple of different neural network architectures. 
 ### Future Steps & Limitations
-## User Guide
 
-<< @ Tim Follo: Screen shots of the website in action!! >>
-
-## Installation Guide
+## Installation, Set-up, and Maintenance
 ### Keras
 ### Theano
 ### Node.js

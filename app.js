@@ -26,5 +26,6 @@ configure(app);
 var loader = require('./controllers/index.js');
 app.get('/Wordly',loader.index);
 app.post('/Wordly',loader.query);
+app.get('/init',loader.init);
 
 module.exports = app;
