@@ -3,6 +3,7 @@ from process_data import sen_to_idx, padd_sentence, get_sentence_embeddings
 from operator import itemgetter
 from itertools import izip, islice
 import h5py
+import pickle
 
 from keras.models import Sequential
 from keras.layers.core import Dense, Activation, Dropout
@@ -35,6 +36,8 @@ class Wordly(Singleton):
     def __init__(self, maxlen = 20, embedsize = 64):
         self.maxlen = maxlen
         self.embedsize = embedsize
+
+        self.tokens = {"<UNK>": 0, "<S>": 1, "</S>":2, "<PAD>": 3}
 
     # def get_instance(self):
     #     return self._instance
@@ -77,9 +80,11 @@ class Wordly(Singleton):
 
         # Initalize Embeddings
         print_v(verbose, '[LOG] Loading Embeddings...')
-        with h5py.File(embed_path,'r') as h5f:
-            words = h5f['words'][:]
-            embeddings = h5f['embeddings'][:]
+        with open(embed_path,'r') as pkl:
+            words, embeddings = pickle.load(pkl)
+        # with h5py.File(embed_path,'r') as h5f:
+        #     words = h5f['words'][:]
+        #     embeddings = h5f['embeddings'][:]
 
         self.word_id = {w:i for (i, w) in enumerate(words)}
         self.id_word = dict(enumerate(words))
@@ -118,14 +123,26 @@ class Wordly(Singleton):
         Look up returns a list of possible entries in decreasing confidence 
         (taken as Euclidean distance)
         """
-        idx = sen_to_idx([query], self.word_id)
-        matrix = numpy.asarray(list(idx))
+        # self.tokens = {"<UNK>": 0, "<S>": 1, "</S>":2, "<PAD>": 3} 
+
+        idx = sen_to_idx(query, self.word_id)
+        idx = padd_sentence(idx, self.maxlen, self.tokens, 
+            include_sens_tags = True)
+        matrix = numpy.reshape(list(idx), (1, self.maxlen))
+        # print matrix
+
         definition = get_sentence_embeddings(matrix, self.embeddings)
+        definition = numpy.reshape(definition, (1, self.maxlen, self.embedsize))
+        # print 'Definition:', definition
 
         pred = self.model.predict(definition, verbose = int(verbose))
-
+        # print 'Prediction', pred
         neighbors, distance = self.knn(pred, self.id_word, self.embeddings, 
             k, verbose = verbose)
+        # return (definition, pred)
         return zip(neighbors, distance)
+
+    def get_embeddings(self):
+        return self.embeddings
 
         
