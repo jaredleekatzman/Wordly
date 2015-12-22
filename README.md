@@ -118,11 +118,11 @@ Despite the minimal design and simplicity of user interaction, we built the GUI 
 
 [^AWS]: [Amazon AWS](https://aws.amazon.com/what-is-cloud-computing/?nc1=f_cc)
 
-The core of the Wordly system is constructed as a python object that is instantiated when the server starts...
+The core of the Wordly system is constructed as a python object that is instantiated when the server starts. Following the Singleton programming pattern, this large, cumbersome model simply persists after it is created. Subsequent queries can be efficiently constructed thereafter.
 
-When a user makes a query, the response is displayed as...
+When a user makes a query, the response is displayed below the search box in three sections: a cope of the user's query, then the best choice word, then an explanation. The Explain function, another core feature of this project, is a statistical summary of the results from the RNN model's output. 
 
-The Explain function, another core feature of this project, is a statistical summary of the results from the RNN model's output. 
+![Wordly System Design](http://54.152.167.250/explain.png)
 
 #### UI Credits
 
