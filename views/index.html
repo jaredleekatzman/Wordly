@@ -38,7 +38,7 @@
 	<form method="post">
 		<div class="row">
 			<div class="ten columns">
-				<textarea id="autosize" class="u-full-width" placeholder="I'm thinking of a word that means …" id="definition"></textarea>
+				<textarea id="autosize" name="query" class="u-full-width" placeholder="I'm thinking of a word that means …"></textarea>
 			</div>
 			<div class="two columns">
 				<input id="go" class="button u-full-width" type="submit" value="go">
@@ -46,19 +46,19 @@
 		</div>
 	</form>
 
-<div class="row results">
+<div class="row results {{ display }}">
 	<h5>You're looking for a word that means...</h5>
-	<p class="u-full-width">aaawd {{ response.query }}</p>
+	<p class="u-full-width">{{ query }}</p>
 </div>
 
-<div class="row results">
+<div class="row results {{ display }}">
 	<h5>Here it is:</h5>
-	<p class="u-full-width">aaawd {{ query }}</p>
+	<p class="u-full-width">{{ query }}</p>
 </div>
 
-<div class="row results">
+<div class="row results {{ display }}">
 	<h5>How did we pick?</h5>
-	<p class="u-full-width">aaawd {{ query }}</p>
+	<p class="u-full-width">{{ query }}</p>
 </div>
 
 </div>

@@ -46,3 +46,7 @@ textarea:focus {
 	font-family: "Courier New";
 	padding-top: 5%;
 }
+
+.hide {
+	display: none;
+}

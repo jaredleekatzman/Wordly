@@ -246,7 +246,7 @@
 var autosize = require('autosize');
 
 window.onload = function(e){ 
-	console.log(document.querySelectorAll('textarea'));
+	// console.log(document.querySelectorAll('textarea'));
 	autosize(document.querySelectorAll('textarea'));
 }
 },{"autosize":1}]},{},[2]);
