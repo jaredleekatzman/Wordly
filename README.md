@@ -143,11 +143,64 @@ We used a number of pre-existing libraries and technologies to make this project
 [^browserify]: [Browserify](http://browserify.org/) is a package that allows us to serve browser-side javascript (for autosize and other DOM manipulations) through express without messying our html templates.
 
 ## Results
-We ran a couple of experiments, trying a couple of different neural network architectures. 
+We ran a couple of experiments, trying a couple of different neural network architectures. The three models and the results are summarized in the table below:
+
+
+| Model 1        | Model 2           | Model 3  |
+| :-------------:  |:-------------:| :-----:|
+| LSTM (512 Nodes)      | LSTM (512 nodes) | LSTM (512 nodes) |
+| LSTM (512 Nodes)     | LSTM (512 Nodes)       |   LSTM (512 Nodes) |
+| Linear Fully Connected (64 Nodes) | Tanh Fully Connceted (512 Nodes)      |    LSTM (512 Nodes) |
+|					| Linear Fully Connceted (64 Nodes) | 			|
+| **Avg. Euclidian Dist:**  | **Avg. Euclidian Dist:** | **Avg. Euclidian Dist:** |
+|2.06332545841 | 2.12454035878 | 2.23333931759 |
+
+Because of our limitations on computing power, we were unable to determine if any of these models converged. Therefore, to continue we choose to implement Model 1.
+
+Unfortunately, an average euclidian distance of ~2.06 is not fairly impressive. Most word embeddings have a nearest neighbor in the range of ~1.3 units. Thus, if we are predicting with an error radius of 2.06 it will be difficult to have the correct word be the first choice. For this reason, we implement Wordly to return the 5 most likely dictionary entries. 
+
+We wanted to explore which words Wordly learned to predict well and which it could not understand. The following is the list of the 10 best predictions with their definitions:
+
+| Word | Definition | Distance |
+| :--- | :--- | :--- |
+| oxytocin | hormone secreted by the posterior pituitary gland (trade name Pitocin) | 0.574378 | 
+| cardamom | rhizomatous herb of India having aromatic seeds used as seasoning | 0.623728
+| heparin | a polysaccharide produced in basophils (especially in the lung and liver) and that inhibits the activity of thrombin in coagulation of the blood | 0.627694
+| Paleozoic | Of an era of geological time marked by the appearance of plants and animals, esp. Invertebrates. | 0.630854
+| strychnine | formerly used as a stimulant | 0.634796 
+| Birmingham | A city in central England | 0.636163
+| glassy |(of ceramics) having the surface made shiny and nonporous by fusing a vitreous solution to it | 0.646284
+| innocently | in a naively innocent manner | 0.647628
+| mistletoe | partially parasitic on beeches, chestnuts and oaks | 0.651191
+| Daoism | philosophical system developed by Lao-tzu and Chuang-tzu advocating a simple honest life and noninterference with the course of natural events | 0.655668
+
+This is a list of words that are very specific in their defintions. When we run the definitions through Wordly we get the correct result. 
+
+However, many of these words have multiple definitions. For example cardamom has two definitions in our test set: "rhizomatous herb of India having aromatic seeds used as seasoning" and "aromatic seeds used as seasoning like cinnamon and cloves especially in pickles and barbecue sauces."
+Wordly is able to understand the first definition and predicts cardamom as the first predicted word. But Wordly's confidence dwindles for the second definition and chili replaces cardamon as the closest word. 
+
+Vector embeddings of two words are close if they are semantically similar. We hypothesize that the fact that Wordly learns very specific words is that their these word embeddings are distributed farther apart from more commonly used words. Therefore, it is easier for the RNN to learn weights that predict vectors substantially different from majority of the other words in the training set. If this hypothesis is true, we would expect that the model performs the worst on the most common words. Below is a sampling of the three words that Wordly performed the worst on:
+
+| Word | Definition | Distance |
+| :--- | :--- | :--- |
+| an | a unit of surface area equal to 100 square meters | 	7.569044
+| talk | 	idle gossip or rumor | 	7.138134
+| The | A word placed before nouns to limit or individualize their meaning. | 6.267479
+
+It logical that Wordly would have trouble learning the definitions for words humans eve have difficulty defining.
+
+Currently, Wordly's performance is not optimal, yet it is incredibly promising. There are multiple improvements we can make on the decision system to hopefully increase its accuracy.
+
 ### Future Steps & Limitations
+**Vector Embeddings:** These results show that Wordly was not able to generalize well for the multiple definitions of words. We suspect this is a problem with the shallwoness of word embeddings. 
+
+The Polyglot embeddings are only of length 64, compared to Google's vector embeddings of length 300.  
+
+**Vocabulary:**
 ## User Guide
 
 << @ Tim Follo: Screen shots of the website in action!! >>
+
 
 ## Installation Guide
 ### Keras
