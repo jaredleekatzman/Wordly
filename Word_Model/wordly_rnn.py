@@ -55,22 +55,22 @@ def train_rnn(num_epochs = 25, opt='rmsprop', dataset='/home/fas/slade/jlk86/scr
     model.add(LSTM(512, return_sequences=True, input_shape=(maxlen, embedsize)))
     model.add(Dropout(0.2))
     model.add(LSTM(512, return_sequences=False))   # 3
-    #Model 5
+    
+    # Model 1
+    #model.add(Dense(embedsize, init='glorot_normal'))
+    #model.add(Activation('linear'))
+
+    #Model 2
     model.add(Dropout(0.2))
     model.add(Dense(512))
     model.add(Activation('tanh'))
     model.add(Dense(embedsize))
     model.add(Activation('linear'))
 
-    # Model 4
+    # Model 3
     #model.add(Dropout(0.3))
     #model.add(LSTM(embedsize, return_sequences=False))
     #model.add(Dense(512, init='glorot_normal'))
-
-    # Model 3?
-    #model.add(Activation('tanh'))
-    #model.add(Dense(embedsize, init='glorot_normal'))
-    #model.add(Activation('linear'))
 
     if weights_path:
         model.load_weights(weights_path)

@@ -80,11 +80,14 @@ class Wordly(Singleton):
 
         # Initalize Embeddings
         print_v(verbose, '[LOG] Loading Embeddings...')
-        with open(embed_path,'r') as pkl:
-            words, embeddings = pickle.load(pkl)
-        # with h5py.File(embed_path,'r') as h5f:
-        #     words = h5f['words'][:]
-        #     embeddings = h5f['embeddings'][:]
+
+        if embed_path.endswith('.pkl'):
+            with open(embed_path,'r') as pkl:
+                words, embeddings = pickle.load(pkl)
+        elif embed_path.endswith('.hdf5'):
+            with h5py.File(embed_path,'r') as h5f:
+                words = h5f['words'][:]
+                embeddings = h5f['embeddings'][:]
 
         self.word_id = {w:i for (i, w) in enumerate(words)}
         self.id_word = dict(enumerate(words))

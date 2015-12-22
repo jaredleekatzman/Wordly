@@ -2,6 +2,8 @@
 
 **Team Members:** Jared Katzman & Tim Follo
 
+**GitHub:** <https://github.com/HombreDeGatos/Wordly>
+
 ## Abstract
 
 ***What's that word?***
@@ -24,7 +26,7 @@ Under the hood, Wordly makes its decisions by using a series of weights that hav
 
 The RNN 'decided' on the weights when it was 'trained' on a large set of dictionary *definitions*. The training process involves performing thousands of computations to minimize the euclidian distance between a predicted *word vector* and the *definition* entry's true value; thus, the RNN learns over time how to set the weights such that all definitions, on average, produce vectors that are close to their partner *words*.
 
-When the user queries our reverse dictionary with a *description*, Wordly performs a mathematical operation on the vectorized version of the query: It is able to compare words to the semantic representation of the *description* and use this to test candidates. We decide to show the user the X  closest words in vector space, in hopes that one of them is the word the user is thinking of.  
+When the user queries our reverse dictionary with a *description*, Wordly performs a mathematical operation on the vectorized version of the query: It is able to compare words to the semantic representation of the *description* and use this to test candidates. We decide to show the user the 5 closest words in vector space, in hopes that one of them is the word the user is thinking of.  
 
 This process, though a simplification, is modeled off of the way humans actually think about language, and as such this is an advanced cognitive decision model. Rather than simply matching preconceived sets of definitions, Wordly handles novel data and is only limited by the vocabulary we have trained it on and the quality of the word vectorizations.
 
@@ -189,22 +191,75 @@ Vector embeddings of two words are close if they are semantically similar. We hy
 
 It logical that Wordly would have trouble learning the definitions for words humans eve have difficulty defining.
 
-Currently, Wordly's performance is not optimal, yet it is incredibly promising. There are multiple improvements we can make on the decision system to hopefully increase its accuracy.
+Currently, Wordly's performance is not optimal, yet it is incredibly promising. We hope to continuing working on the project in the future. There are multiple improvements we can make on the decision system to hopefully increase its accuracy. 
 
 ### Future Steps & Limitations
-**Vector Embeddings:** These results show that Wordly was not able to generalize well for the multiple definitions of words. We suspect this is a problem with the shallwoness of word embeddings. 
+**Vector Embeddings:** These results show that Wordly was not able to generalize well for the multiple definitions of words. We suspect this is a problem with the shallwoness of the word embeddings. 
+The Polyglot embeddings are only 64 units long. Other public vector embeddings, like Google's word2vec, at leas have a length of 300. The advantage of having a larger embedding space is that the representations of words can be more distributed across the space. If non-similar words have a larger distance, than Wordly can have a larger error radius for predictions. 
 
-The Polyglot embeddings are only of length 64, compared to Google's vector embeddings of length 300.  
+**Vocabulary:** Looking at Wordly's results, we noticed that a large subset of the vocabulary was proper nouns. This is slightly counter-intuitive to the goal of the system. We wanted to create a reverse dictionary that represented the complexity and intricacies of human language, not a trivia-answering machine. The vocabulary list we used was due to the restraints of the Polyglot dataset. To improve the system, we would change the vocabulary to a more comprehensive list of words, with many of the proper nouns and entities removed. 
 
-**Vocabulary:**
-## User Guide
-
-<< @ Tim Follo: Screen shots of the website in action!! >>
-
+**Computational Power & Time:** Running these RNN is a computationally intensive  task. We were limited to using Yale University's High Performaning Clusters. The cluster requires running jobs in a queue system and so for the sake of fairness, jobs are not allowed to run ad infinitum. We were unable to determine whether any of the models converged and thus forced to choose the best model with the lowest validation error. Next steps would be to further refine the model and run them for enough time to obtain conclusive results. 
 
 ## Installation Guide
-### Keras
 ### Theano
-### Node.js
+Theano has an easy installation for a vanilla version. You can use PyPI:
 
-<< @Tim Follo: Installation on Node.js (I feel like we can just take all of the stuff you've written on the GitHub already)
+	sudo pip install Theano
+
+We used version `0.7.0`. 
+Theano depends on the follow packages:
+
+- numpy, scimpy
+- gcc+
+
+It is more difficult to unlock the GPU features of Theano and not neceesary to run our code. For reference, the GPU configuration and installation guide is [here](http://deeplearning.net/software/theano/install.html#install). 
+
+### Keras
+More thorough installation guide: <http://keras.io/#installation>.
+Keras depends on the following Python packages:
+ 
+- numpy, scimpy
+- pyyaml
+- h5py 
+
+(each can be installed using conventional package managers, e.g. `pip`).
+
+The easiest way to install Keras is through the PyPI:
+
+	sudo pip install keras
+
+We used Keras version `0.3.0`
+
+### Wordly
+We have submitted with this write up all of our scripts that have been used to scrape, filter, and process the data. Additionally, we have included the code to train a RNN. However, we spent days training our different models and therefore we do not expect you to do the same. 
+
+Our results have been packaged into a final module called `wordly.py`. Wordly.py contains a `Wordly` class that can start predicting dicitonary entries in two steps:
+
+First, we instantiate and initialize the model: 
+	 
+~~~python
+ from wordly import Wordly
+ model = Wordly()
+ model.initialize_model(weights = 'weights.hdf5', # Local Weights File
+ 						embeddings = 'embedding.pkl') # Local Embedding File
+~~~
+This requires two local files:`weights.hdf5` and `embedding.pkl`. The weights file must be custom to the model to be loaded. The embeddings file needs to have two unpackable values: `words` and `embeddings`. Words is the vocabulary list and embeddings is the corresponding vector embeddings. 
+
+Now, we can query the model
+
+~~~python
+results = model.look_up('a city in central England', k = 5)
+~~~
+Results will be a list of length $K$ containing the tuples `(PREDICTION, DISTANCE)` for the $K$ closest predictions. 
+
+Wordly depends on the following packages:
+
+- Keras
+- H5PY
+- Pickle
+- Theano
+- Numpy
+
+Additionally, it depends on our script `process_data.py` for preprocessing sentences. Ensure to append the local directory of `process_data.py` to your `$PATH$` variable. 
+
