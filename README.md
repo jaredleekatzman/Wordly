@@ -120,6 +120,8 @@ The core of the Wordly system is constructed as a python object that is instanti
 
 When a user makes a query, the response is displayed as...
 
+![Wordly System Design](http://54.152.167.250/explain.png)
+
 The Explain function, another core feature of this project, is a statistical summary of the results from the RNN model's output. 
 
 #### UI Credits
