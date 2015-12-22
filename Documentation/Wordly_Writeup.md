@@ -1,4 +1,4 @@
-# Wordly Reverse Dictionary
+# *Wordly*: A Reverse Dictionary
 
 **Team Members:** Jared Katzman & Tim Follo
 
@@ -10,7 +10,7 @@
 
 ***It's on the tip of my tongue...***
 
-Wordly is a reverse dictionary decision system that could answer this question. More flexible and usable than a thesaurus, Wordly is a complete cognitive-based decision system (a thesaurus query, to the contrary, would be based on a large set of granular word congruence rules). It can take any novel, user-defined description of a word and produce the word the user is trying to describe.
+Wordly is a reverse dictionary decision system that could answer this question. More flexible and usable than a thesaurus, Wordly is a complete cognitive-based decision system (a thesaurus query, to the contrary, would be based on a large set of granular word congruence rules). It can take any novel, user-defined *description* of a word and produce the *word* the user is trying to describe.
 
 It might have taken you, a human proficient in the english language and familiar with this mode of forgetfullness (maybe even for this exact situation!) a moment beofre guessing: "compress". You read all the words in the description, then formed some semantic representation from the input (this is the part humans naturally excel at, while machines struggle), then searched your memory for a matching word. But your memory is fickle! You can know exactly what to look for, but maybe it has been years since you thought of "compress" that way, and it simply doesnt show up while you rack your brain.
 
@@ -25,6 +25,8 @@ Under the hood, Wordly makes its decisions by using a series of weights that hav
 The RNN 'decided' on the weights when it was 'trained' on a large set of dictionary *definitions*. The training process involves performing thousands of computations to minimize the euclidian distance between a predicted *word vector* and the *definition* entry's true value; thus, the RNN learns over time how to set the weights such that all definitions, on average, produce vectors that are close to their partner *words*.
 
 When the user queries our reverse dictionary with a *description*, Wordly performs a mathematical operation on the vectorized version of the query: It is able to compare words to the semantic representation of the *description* and use this to test candidates. We decide to show the user the X  closest words in vector space, in hopes that one of them is the word the user is thinking of.  
+
+This process, though a simplification, is modeled off of the way humans actually think about language, and as such this is an advanced cognitive decision model. Rather than simply matching preconceived sets of definitions, Wordly handles novel data and is only limited by the vocabulary we have trained it on and the quality of the word vectorizations.
 
 ## Design
 Numerous algorithms in Natural Language Processing (NLP) compute mathematical representations of words. These representations have shown to encode important semantic relationships and allow for more effective language modeling.
@@ -47,8 +49,7 @@ The premise is to take the definitions of a dictionary and build a deep neural n
 
 [include graphic]
 
-We will take our training data (a set of definitions and their respective dictionary entries) and compute a vector representation of the words and defintions (a matrix of word vectors). We will then have numerical input for the network. The architecture of the network will be a recurrent neural network. We will train the network on the input data and attempt to minimize the euclidian distance between the predicted word vector and the true dictionary entry. Lastly, we will build a UI 
-to allow users to query their own definitions. The system will predict possible dictionary entries and display them to the user.
+We will take our training data (a set of definitions and their respective dictionary entries) and compute a vector representation of the words and defintions (a matrix of word vectors). We will then have numerical input for the network. The architecture of the network will be a recurrent neural network. We will train the network on the input data and attempt to minimize the euclidian distance between the predicted word vector and the true dictionary entry. Lastly, we will build a UI to allow users to query their own definitions. The system will predict possible dictionary entries and display them to the user.
 
 ## Implementation
 ### Training Data 
@@ -96,13 +97,21 @@ We evaluated the network with a Euclidian Distance objective function:
 $$
 J(\theta) := \sqrt{(y_{pred} - y_{true})^2}
 $$
-Where $y_{pred}$ is the predicted dictionary entry vector and $y_{true}$ is the vector embedding of the correct dictionary entry. Keras (on top of Theano) symbolically computes the gradients of the loss function with respect to the network parameters $\theta$.
+Where $$ y_{pred} $$ is the predicted dictionary entry vector and $$ y_{true} $$ is the vector embedding of the correct dictionary entry. Keras (on top of Theano) symbolically computes the gradients of the loss function with respect to the network parameters $$ \theta $$.
 
 We trained the network on batch sizes of 128 training examples. Each epoch took on average 2200s using a Tesla M2090 GPU and we trained it for ### epochs. 
 
 The final results ended in an average euclidian distance of ####.  
 
 ### User Interface
+
+Wordly's user interface is an attractive web-based platform designed for simplicity, elegance, and performance.
+
+![Wordly Homepage](http://54.152.167.250/GUI.png)
+
+This interface is designed for carefree ease-of-use, hiding its proudest features behind smooth performance: 
+
+Despite the simplicity of user interaction, 
 
 ## Results
 ### Future Steps & Limitations
