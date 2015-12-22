@@ -102,7 +102,7 @@ Where $$ y_{pred} $$ is the predicted dictionary entry vector and $$ y_{true} $$
 
 ### User Interface
 
-Wordly's user interface is an attractive web-based platform designed for simplicity, elegance, and performance. It primarily consists of a simple textbox and "go" button
+Wordly's user interface is an attractive web-based platform designed for simplicity, elegance, and performance. It primarily consists of a simple textbox [for the user's *description*] and a "go" button.
 
 ![Wordly Homepage](http://54.152.167.250/GUI.png)
 
@@ -112,17 +112,35 @@ Wordly can be accessed here: [http://54.152.167.250/Wordly](http://54.152.167.25
 
 Despite the minimal design and simplicity of user interaction, we built the GUI on top of a full-fetured *express.js*[^express.js] app that is deployed on *Amazon AWS*[^AWS] cloud management. In addition to making the service publicly available, this decision enables us to run the RNN generated back-end python model live on the server.
 
-[^express.js]: [express.js](http://expressjs.com/en/index.html)
+[^express.js]: [express.js](http://expressjs.com/en/index.html) is a framework that simplifies the creation of web-apps built in node.js
 
 [^AWS]: [Amazon AWS](https://aws.amazon.com/what-is-cloud-computing/?nc1=f_cc)
 
-The core of the Wordly system is...
+The core of the Wordly system is constructed as a python object that is instantiated when the server starts...
 
-The Explain function, another core feature of...
+When a user makes a query, the response is displayed as...
+
+The Explain function, another core feature of this project, is a statistical summary of the results from the RNN model's output. 
 
 #### UI Credits
 
-We used a number of pre-existing libraries and technologies to make this project as full-featured, robust, and modular as possible.
+We used a number of pre-existing libraries and technologies to make this project as full-featured, robust, and modular as possible. The packages and projects that we relied the most upon are:
+
+* node.js [^node]
+* npm [^npm]
+* nunjucks [^nunjucks]
+* CrowdSound [^CrowdSound]
+* Skeleton.js [^skeleton.js]
+* Autosize [^autosize]
+* Browserify [^browserify]
+
+[^node]: [node.js](https://nodejs.org/en/) is a full-featured system for writing server-side javascript code, and is the underlying language of our system.
+[^npm]: [npm](https://www.npmjs.com/) is the node.js package manager.
+[^nunjucks]: [nunjucks](https://mozilla.github.io/nunjucks/) is a templating engine for node.js
+[^CrowdSound]: Base code, including all install files and basic webserver/app taken from code written for [CrowdSound](https://github.com/HombreDeGatos/CrowdSound), a project for Yale's CPSC439 in 2015. It was created by Eli Block, Jack Feeny, Tim Follo, Jared Katzman, and Terin Patel-Williams.
+[^skeleton.js]: [Skeleton](http://getskeleton.com/) is a piece of CSS boilerplate that helps to style our site.
+[^autosize]: [Autosize](https://github.com/jackmoore/autosize) is a short script that makes the text box scale to input size.
+[^browserify]: [Browserify](http://browserify.org/) is a package that allows us to serve browser-side javascript (for autosize and other DOM manipulations) through express without messying our html templates.
 
 ## Results
 We ran a couple of experiments, trying a couple of different neural network architectures. 
