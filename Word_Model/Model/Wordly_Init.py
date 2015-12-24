@@ -7,7 +7,7 @@ import sys
 import json
 from socketIO_client import SocketIO
 
-with SocketIO('localhost', 8000) as socketIO:
+with SocketIO('54.152.167.250', 8000) as socketIO:
     # socketIO.emit('aaa')
     # socketIO.wait(seconds=1)
 
