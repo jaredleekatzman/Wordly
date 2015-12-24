@@ -48,17 +48,17 @@
 
 <div class="row results {{ display }}">
 	<h5>You're looking for a word that means...</h5>
-	<p class="u-full-width">rhizomatous herb of India having aromatic seeds used as seasoning</p>
+	<p class="u-full-width">{{ query }}</p>
 </div>
 
 <div class="row results {{ display }}">
 	<h5>Here it is:</h5>
-	<p class="u-full-width">cardamom</p>
+	<p class="u-full-width">{{ result }}</p>
 </div>
 
 <div class="row results {{ display }}">
 	<h5>How did we pick?</h5>
-	<p class="u-full-width">For your search string, "cardamom" was the Wordly system's best guess --- this had a Euclidean distance of 0.623728 away from your search string.</p>
+	<p class="u-full-width">For your search string, "{{ result }}" was the Wordly system's best guess --- this had a Euclidean distance of {{ explain.score }} from your search string.</p>
 </div>
 
 </div>

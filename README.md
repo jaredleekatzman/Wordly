@@ -100,7 +100,7 @@ We evaluated the network with a Euclidian Distance objective function:
 $$
 J(\theta) := \sqrt{(y_{pred} - y_{true})^2}
 $$
-Where $$ y_{pred} $$ is the predicted dictionary entry vector and $$ y_{true} $$ is the vector embedding of the correct dictionary entry. Keras (on top of Theano) symbolically computes the gradients of the loss function with respect to the network parameters $$ \theta $$. 
+Where $ y_{pred} $ is the predicted dictionary entry vector and $ y_{true} $ is the vector embedding of the correct dictionary entry. Keras (on top of Theano) symbolically computes the gradients of the loss function with respect to the network parameters $ \theta $. 
 
 ### User Interface
 
@@ -263,3 +263,32 @@ Wordly depends on the following packages:
 
 Additionally, it depends on our script `process_data.py` for preprocessing sentences. Ensure to append the local directory of `process_data.py` to your `$PATH$` variable. 
 
+## Appendix
+
+Attached with this writeup are the following files:
+
+- Dictionary Scraping Scripts:
+	- CleanOPTED.py                       
+	- CleanOxford.py          
+	- CleanWebsters.py  
+	- SearchWN.py         
+- Dictionary Processing Scripts:
+	- process_data.py
+		- Convert a given dictionary to their vector embeddings
+	- filter_dicts.py          
+		- Given a vocabulary list, extract all of the entries of the dictionary and put it in one dictionary 
+	- extract_embeddings.py
+		- (Test file) Extract embeddings can be used to get the embeddings from a large embedding binary file. This could be used for the Google word2vec embeddings. 
+- Training Recurrent Neural Network
+	- wordly_rnn.py
+- Run and Implement Wordly:
+	- Wordly.py
+	- weights.hdf5
+	- embeddings.hdf5 
+- Corpus Scraping (Test)
+	- StripHeaders           
+	- stripStopwords.pl
+	- Combine                 
+	- StripCode   
+	- ParseEmbeddingCorpus.py 
+	
