@@ -4,6 +4,8 @@ from operator import itemgetter
 from itertools import izip, islice
 import h5py
 import pickle
+import timeit
+import sys
 
 from keras.models import Sequential
 from keras.layers.core import Dense, Activation, Dropout
@@ -72,19 +74,27 @@ class Wordly(Singleton):
 
         # Build Model
         print_v(verbose, '[LOG] Compiling Model...')
+        start_time = timeit.default_timer()
+
         model = self.get_model(json, self.maxlen, self.embedsize)
         model.load_weights(weights)
         model.compile(loss=euclidian_dist, optimizer='rmsprop')
-
         self.model = model 
+
+        end_time = timeit.default_timer()
+        compile_time = (end_time - start_time)
+
+        if verbose:
+            print >> sys.stderr, ('Training took %.2fm' % (compile_time / 60.))
 
         # Initalize Embeddings
         print_v(verbose, '[LOG] Loading Embeddings...')
-
         if embed_path.endswith('.pkl'):
+            print('Embedding Pickle file:',embed_path)
             with open(embed_path,'r') as pkl:
                 words, embeddings = pickle.load(pkl)
         elif embed_path.endswith('.hdf5'):
+            print('Embedding h5py file:', embed_path)
             with h5py.File(embed_path,'r') as h5f:
                 words = h5f['words'][:]
                 embeddings = h5f['embeddings'][:]
